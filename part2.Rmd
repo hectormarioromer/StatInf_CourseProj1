@@ -32,7 +32,6 @@ str(tg)
 head(tg, 5)
 ```
 
-
 ## Basic Summary of the data
 
 Using the summary function to summarize the dataset:
@@ -41,11 +40,9 @@ Using the summary function to summarize the dataset:
 summary(tg)
 ```
 
-We can see that 30 observations correspond to orange juice (supp = "OJ") and 30 observations to vitamin C (supp = "VC"). Since "dose" levels are fixed quantities, its mean and median carry little information. 
+We can see that 30 observations correspond to orange juice (supp = "OJ") and 30 observations to vitamin C (supp = "VC"). Since "dose" levels are fixed quantities, its mean and median carry little information. Using a boxplot to visualize the impact (if any) of dossage and supplement on tooth growth:
 
-Using a boxplot to visualize the impact (if any) of dossage and supplement on tooth growth:
-
-```{r}
+```{r fig.height=4}
 library(ggplot2)
 p <- ggplot(tg, aes(x = dose, y = len)) + 
         theme_bw() +
@@ -59,8 +56,6 @@ p
 Looking at the chart, it appears that when dose is 2mg the median for OJ and VC are similar. When the dose is lower (0.5mg and 1mg) orange juice has a much possitive impact on tooth growth.
 
 ## Hypothesis tests
-
-Let's consider the following two hypothesis:
 
 H0 = Orange juice has an impact of tooth growth compared to ascorbic acid
 
