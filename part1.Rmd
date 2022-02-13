@@ -1,0 +1,15 @@
+---
+title: "Statistical Inference Course Project pt 1"
+author: "Hector Mario Romer"
+date: "2/12/2022"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, fig.width = 10, fig.height = 4, 
+                      message = FALSE, warning = FALSE)
+```
+## Overview
+
+In this project I am going to investigate the exponential distribution in R an compare it with the CLT (Central Limit Theorem). Lambda will be set to 0.2 for all of the simulations. I will investigate the distribution of averages of 40 exponentials, doing a thousand simulations. 
+
