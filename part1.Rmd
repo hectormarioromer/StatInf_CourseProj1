@@ -1,15 +1,130 @@
 ---
-title: "Statistical Inference Course Project pt 1"
+title: "Exponential distribution comparison with Central Limit Theorem"
 author: "Hector Mario Romer"
 date: "2/12/2022"
 output: pdf_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, fig.width = 10, fig.height = 4, 
+knitr::opts_chunk$set(echo = TRUE, fig.width = 7, fig.height = 3, 
                       message = FALSE, warning = FALSE)
 ```
+# Statistical Inference Course Project pt 1
 ## Overview
 
 In this project I am going to investigate the exponential distribution in R an compare it with the CLT (Central Limit Theorem). Lambda will be set to 0.2 for all of the simulations. I will investigate the distribution of averages of 40 exponentials, doing a thousand simulations. 
 
+## Simulations
+
+Run the test and save the result in a matrix of size n * tests called *exp_dist*. The means are saved in dataframe *exp_dist_means*.
+
+```{r}
+# Load required libraries
+suppressMessages(library(ggplot2))
+
+# Set seed 
+set.seed(1307)
+
+# Set constants as required
+lambda <- 0.2
+n <- 40
+tests <- 1000
+
+# run the test
+exp_dist <- matrix(data = rexp(n * tests, lambda), nrow = tests)
+exp_dist_means <- data.frame(means = apply(exp_dist, 1, mean))
+```
+
+## Sample Mean versus Theoretical Mean
+
+Knowing that the expected mean $\mu$ of a exponential distribution of rate $\lambda$ is: 
+
+
+$\mu= \frac{1}{\lambda}$ 
+
+
+Calculate the expected mean *mu*:
+
+```{r}
+mu <- 1 / lambda
+mu
+```
+
+
+Calculate $\bar X$ as the average sample mean of 1000 simulations of 40 randomly sampled exponential distributions:
+
+```{r}
+X <- mean(exp_dist_means$means)
+X
+```
+
+
+We can see that the average sample mean (```r X```) is very close to the expected mean (```r mu```)
+
+
+Plotting the means:
+
+```{r}
+ggplot(data = exp_dist_means, aes(x = means)) +
+        geom_histogram(binwidth = 0.1, color = "navy", fill = "lightblue") +
+        theme_bw() +
+        scale_x_continuous(breaks = round(seq(min(exp_dist_means$means), 
+                max(exp_dist_means$means), by = 1)))
+```
+
+## Sample Variance versus Theoretical Variance
+
+The expected standard deviation $\sigma$ of a exponential distribution rate $\lambda$ is:
+
+
+$\sigma = \frac{1/\lambda}{\sqrt{n}}$ 
+
+
+Therefore, our expected standard deviation *sd* is:
+
+```{r}
+sd <- (1/lambda) / sqrt(n)
+sd
+```
+
+
+The variance $Var$ of standard deviation $\sigma$ is:
+
+$Var = \sigma^2$
+
+```{r}
+Var <- sd^2
+Var
+```
+
+
+Having $Var_x$ as the variance of the average sample mean of 1000 simulations of 40 randomly sampled exponential distribution, and $\sigma_x$ as the corresponding standard deviation:
+
+```{r}
+Var_x <- var(exp_dist_means$means)
+Var_x
+
+sd_x <- sd(exp_dist_means$means)
+sd_x
+```
+
+
+We can see that both the variance are the standard deviaton are close to the expected values. Please note that the variance is the sd squared, which makes minor differences bigger.
+
+## Distribution
+
+Let's compare the population means and standard deviation (in blue) with a normal distribution of the expected values (in red). Vertical lines represent means: expected (red) and calculated (blue).
+
+```{r}
+ggplot(data = exp_dist_means, aes(x = means)) + 
+        theme_bw() +
+        geom_histogram(binwidth = 0.1, aes(y =..density..), alpha = 0.2) + 
+        stat_function(fun = c("dnorm"), args = list(mean = mu , sd = sd),
+              colour = "tomato3", size = 1) + 
+        geom_vline(xintercept = mu, size = 1, colour = "tomato3") + 
+        geom_density(colour = "navy", size = 1) +
+        geom_vline(xintercept = X, size = 1, colour="navy") + 
+        scale_x_continuous(breaks = seq(mu-3, mu+3, 1), limits = c(mu-3,mu+3)) 
+```
+
+We can see that the calculated distributions of means of random sampled exponential distributions are close to the expected values using the given lambda.
